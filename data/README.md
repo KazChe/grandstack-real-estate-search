@@ -7,7 +7,25 @@ Import county level parcel data (in this case for Gallatin, MT):
 Download county level shapefile
 
 ```shell
-wget ftp://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/Cadastral/Parcels/Gallatin/GallatinOwnerParcel_shp.zip
+My own notes
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
+bash ~/miniconda.sh -b -p $HOME/miniconda
+which conda
+conda
+
+start here -> source ~/miniconda/bin/activate
+conda init zsh
+conda install -c conda-forge gdal
+
+(base)@:~/Downloads>> ogr2ogr gallatin.geojson -f "GeoJSON" -lco id_field=PARCELID -t_srs "EPSG:4326" Gallatin_SHP/Gallatin_Parcels/Gallatin_Parcels.shp
+```
+Download the file from 
+
+[ftp.geoinfo.msl.mt.gov - /Data/Spatial/MSDI/Cadastral/Parcels/](http://ftp.geoinfo.msl.mt.gov/Data/Spatial/MSDI/Cadastral/Parcels/)    
+``````
+Ended up finding an alredy GeoJSON'd file from 
+https://catalog.data.gov/dataset/loudoun-parcels-9bcd7
+
 ```
 
 Convert shapefile to geojson, using [GDAL command line tool](https://gdal.org/index.html)
@@ -27,11 +45,11 @@ CREATE CONSTRAINT ON (p:Property) ASSERT p.id IS UNIQUE
 Import `Property` nodes
 
 ```cypher
-CALL apoc.load.json("file:///gallatin.geojson") YIELD value
-FOREACH (feat IN  value.features |
-    MERGE (p:Property {id: feat.id})
-    SET p += feat.properties
-)
+CALL apoc.load.json("file:///Loudoun_Parcels.geojson") YIELD value
+ FOREACH (feat IN  value.features |
+     MERGE (p:Property {id: feat.id})
+     SET p += feat.properties
+ )
 ```
 
 Create database uniqueness constraint for `City` nodes
