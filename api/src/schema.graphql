@@ -1,3 +1,13 @@
+type City {
+   _id: Long!
+   name: String!
+   propertys: [Property] @relation(name: "IN_CITY", direction: IN)
+   avgValue: Float @cypher(statement: """
+   MATCH (this)<-[:IN_CITY]-(p:Property)
+   RETUN avg(p.TotalValue)
+   """)
+}
+
 type Property {
    _id: Long!
    AddressL_1: String
@@ -42,7 +52,10 @@ type Property {
    Township: String
    WildHayAcr: Float!
    id: String!
-   estimatesSalesPrice: Int @cypher(statement: "RETURN toInteger(this.TotalValue * 1.4)")
+   location: Point
+   polygon: [Point]
+   in_city: [City] @relation(name: "IN_CITY", direction: OUT)
 }
+
 
 

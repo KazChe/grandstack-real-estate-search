@@ -45,11 +45,11 @@ CREATE CONSTRAINT ON (p:Property) ASSERT p.id IS UNIQUE
 Import `Property` nodes
 
 ```cypher
-CALL apoc.load.json("file:///Loudoun_Parcels.geojson") YIELD value
- FOREACH (feat IN  value.features |
-     MERGE (p:Property {id: feat.id})
-     SET p += feat.properties
- )
+    CALL apoc.load.json("file:///Loudoun_Parcels.geojson") YIELD value
+     FOREACH (feat IN  value.features |
+         MERGE (p:Property {id: feat.id})
+         SET p += feat.properties
+     )
 ```
 
 Create database uniqueness constraint for `City` nodes
