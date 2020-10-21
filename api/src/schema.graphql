@@ -1,6 +1,7 @@
 type City {
    _id: Long!
    name: String!
+   uuid: String
    propertys: [Property] @relation(name: "IN_CITY", direction: IN)
    avgValue: Float @cypher(statement: """
    MATCH (this)<-[:IN_CITY]-(p:Property)
@@ -57,5 +58,7 @@ type Property {
    in_city: [City] @relation(name: "IN_CITY", direction: OUT)
 }
 
-
+type Query {
+   citiesByUUID(uuid: [String!]): [City!]
+}
 
